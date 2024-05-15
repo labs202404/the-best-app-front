@@ -17,5 +17,9 @@ export const routes: Routes = [
   {
     path: 'files',
     loadComponent:() => import('./files/files.component').then(m => m.FilesComponent),
-  }
+  },
+  {
+    path: 'files/edit',
+    loadComponent:() => import('./files/edit/edit.component').then(m => m.FilesEditComponent),
+  },
 ];

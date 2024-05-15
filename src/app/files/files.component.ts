@@ -12,6 +12,7 @@ import { MatIcon } from '@angular/material/icon';
 import { DatePipe } from '@angular/common';
 import { MatDivider } from '@angular/material/divider';
 import { MatIconButton } from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-files',
@@ -29,7 +30,7 @@ import { MatIconButton } from '@angular/material/button';
             <button mat-icon-button>
               <mat-icon>download</mat-icon>
             </button>
-            <button mat-icon-button color="accent">
+            <button mat-icon-button color="accent" routerLink="/files/edit">
               <mat-icon>edit</mat-icon>
             </button>
             <button mat-icon-button color="primary">
@@ -71,6 +72,7 @@ import { MatIconButton } from '@angular/material/button';
     MatCardTitle,
     MatCardFooter,
     MatIconButton,
+    RouterLink
   ]
 })
 export class FilesComponent {
@@ -86,7 +88,7 @@ export class FilesComponent {
       created: new Date(),
     },
     {
-      name: 'File 2',
+      name: 'File 3',
       type: 'document',
       created: new Date(),
     },
@@ -97,6 +99,11 @@ export class FilesComponent {
     },
     {
       name: 'File 5',
+      type: 'document',
+      created: new Date(),
+    },
+    {
+      name: 'File 6',
       type: 'document',
       created: new Date(),
     },
