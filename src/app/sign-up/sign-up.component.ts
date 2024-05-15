@@ -81,3 +81,5 @@ export class SignUpComponent {
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 }
+
+

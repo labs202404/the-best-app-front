@@ -15,13 +15,14 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 @Component({
     selector: 'app-files-edit',
-    template: `<mat-card>
+    template: `
+      <mat-card>
     <mat-card-header>
     <mat-card-title> File name</mat-card-title>
     <mat-card-subtitle>Изменить имя файла</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <div class="file-edit-form" [formGroup]="fileEditForm">
+        <div [formGroup]="fileEditForm">
             <mat-form-field>
                 <input formControlName="newName" placeholder="Новое имя файла" matInput>
             </mat-form-field>
@@ -35,9 +36,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
     </mat-card>
     `,
     styles: `
-    mat-card{
+    mat-card {
         width: 500px;
-        height: 300px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
@@ -48,6 +48,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
     }
    mat-form-field {
     width:100%;
+     margin-bottom: 70px;
    }
     mat-card-footer {
         text-align: center;

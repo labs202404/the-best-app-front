@@ -20,6 +20,10 @@ export const routes: Routes = [
   },
   {
     path: 'files/edit',
-    loadComponent:() => import('./files/edit/edit.component').then(m => m.FilesEditComponent),
+    loadComponent: () => import('./files/edit/edit.component').then(m => m.FilesEditComponent),
   },
+  {
+    path: 'files/permissions',
+    loadComponent: () => import('./files/permissions/permissions.component').then((m) => m.PermissionsComponent)
+  }
 ];

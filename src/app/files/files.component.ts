@@ -17,7 +17,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-files',
   template: `
-    <h2>Доступные файлы</h2>
+    <h2>Мои файлы</h2>
     <div class="files-block">
       @for (file of myFiles; track file.name) {
         <mat-card>
@@ -30,14 +30,32 @@ import { RouterLink } from '@angular/router';
             <button mat-icon-button>
               <mat-icon>download</mat-icon>
             </button>
-            <button mat-icon-button color="accent" routerLink="/files/edit">
+            <button mat-icon-button color="accent" routerLink="edit">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="primary">
+            <button mat-icon-button color="primary" routerLink="permissions">
               <mat-icon>folder_supervised</mat-icon>
             </button>
             <button mat-icon-button color="warn">
               <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-footer>
+        </mat-card>
+      }
+    </div>
+
+    <h2>Доступные</h2>
+    <div class="files-block">
+      @for (file of myFiles; track file.name) {
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>description</mat-icon>
+            <mat-card-title>{{ file.name }}</mat-card-title>
+            <mat-card-subtitle>{{ file.created | date }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-footer>
+            <button mat-icon-button>
+              <mat-icon>download</mat-icon>
             </button>
           </mat-card-footer>
         </mat-card>
@@ -72,8 +90,8 @@ import { RouterLink } from '@angular/router';
     MatCardTitle,
     MatCardFooter,
     MatIconButton,
-    RouterLink
-  ]
+    RouterLink,
+  ],
 })
 export class FilesComponent {
   readonly myFiles: File[] = [
@@ -109,6 +127,9 @@ export class FilesComponent {
     },
   ];
 
+  click() {
+    console.log('click');
+  }
 }
 
 interface File {
