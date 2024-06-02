@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   MatCard,
   MatCardContent,
@@ -11,7 +11,10 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButton } from '@angular/material/button';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { SignInData, SignInService } from './sign-in.service';
+import { AuthService } from '../auth/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sign-up',
@@ -34,7 +37,7 @@ import { RouterLink } from '@angular/router';
         </div>
       </mat-card-content>
       <mat-card-footer>
-        <button routerLink="/files" [disabled]="signInForm.invalid" mat-flat-button color="primary">Войти</button>
+        <button (click)="signIn()" [disabled]="signInForm.invalid" mat-flat-button color="primary">Войти</button>
         <button mat-button class="signup-btn" color="primary" routerLink="/signup">Нет аккаунта?</button>
       </mat-card-footer>
     </mat-card>
@@ -54,6 +57,7 @@ import { RouterLink } from '@angular/router';
       margin-left: 10px;
     }
   `,
+  providers: [SignInService],
   standalone: true,
   imports: [
     MatCard,
@@ -71,8 +75,25 @@ import { RouterLink } from '@angular/router';
   ]
 })
 export class SignInComponent {
+  private readonly signInService = inject(SignInService);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly snackBar = inject(MatSnackBar);
+
   public readonly signInForm = new FormGroup({
     userName: new FormControl('', [Validators.required, Validators.minLength(5)]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
+
+  signIn(): void {
+    this.signInService.signIn(this.signInForm.value as SignInData).subscribe({
+      next: (result) => {
+        this.authService.setAccessToken(result.token);
+        this.router.navigate(['/files']);
+      },
+      error: () => {
+        this.snackBar.open('Проверьте форму');
+      }
+    });
+  }
 }

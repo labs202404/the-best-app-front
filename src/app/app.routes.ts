@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
   {
     path: 'files',
     loadComponent:() => import('./files/files.component').then(m => m.FilesComponent),
+    canActivate: [authGuard]
   },
   {
     path: 'files/edit',
