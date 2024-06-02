@@ -93,7 +93,7 @@ export class SignUpComponent {
   signUp(): void {
     this.signUpService.signUp(this.signUpForm.value as SignUpData).subscribe({
       next: (result) => {
-        this.authService.setAccessToken(result.token);
+        this.authService.setAuth(result.token);
         this.router.navigate(['/files']);
       },
       error: () => {

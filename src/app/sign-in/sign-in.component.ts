@@ -88,7 +88,7 @@ export class SignInComponent {
   signIn(): void {
     this.signInService.signIn(this.signInForm.value as SignInData).subscribe({
       next: (result) => {
-        this.authService.setAccessToken(result.token);
+        this.authService.setAuth(result.token);
         this.router.navigate(['/files']);
       },
       error: () => {

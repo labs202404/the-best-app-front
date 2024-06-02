@@ -4,13 +4,24 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  private accessToken?: string;
+  private readonly tokenExpiringTime = 3540000; // 59 min
+  private readonly lcKey = 'authData';
 
   public isAuth(): boolean {
-    return this.accessToken !== undefined;
+    const authDataRaw = localStorage.getItem(this.lcKey);
+    if (!authDataRaw) {
+      return false;
+    }
+    const authData = JSON.parse(authDataRaw) as AuthData;
+    return Date.now() < (authData.authAt + this.tokenExpiringTime);
   }
 
-  public setAccessToken(token: string): void {
-    this.accessToken = token;
+  public setAuth(token: string): void {
+    window.localStorage.setItem(this.lcKey, JSON.stringify({ token, authAt: Date.now() }));
   }
+}
+
+interface AuthData {
+  readonly token: string;
+  readonly authAt: number;
 }
