@@ -4,7 +4,7 @@ import { authGuard } from './auth/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'signin',
+    redirectTo: 'files',
     pathMatch: 'full',
   },
   {

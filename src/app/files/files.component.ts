@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import {
   MatCard,
   MatCardContent,
@@ -9,10 +9,14 @@ import {
 } from '@angular/material/card';
 import { MatList, MatListItem, MatListSubheaderCssMatStyler } from '@angular/material/list';
 import { MatIcon } from '@angular/material/icon';
-import { DatePipe } from '@angular/common';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { MatDivider } from '@angular/material/divider';
 import { MatIconButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { DragFieldComponent } from './drag-field.component';
+import { debounceTime, Subject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FilesService } from './files.service';
 
 @Component({
   selector: 'app-files',
@@ -61,9 +65,19 @@ import { RouterLink } from '@angular/router';
         </mat-card>
       }
     </div>
+    <app-drag-field *ngIf="showDragField$ | async"></app-drag-field>
 
   `,
   styles: `
+    :host {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
     mat-card {
       width: 200px;
     }
@@ -91,48 +105,50 @@ import { RouterLink } from '@angular/router';
     MatCardFooter,
     MatIconButton,
     RouterLink,
+    DragFieldComponent,
+    NgIf,
+    AsyncPipe,
   ],
 })
 export class FilesComponent {
-  readonly myFiles: File[] = [
-    {
-      name: 'File 1',
-      type: 'document',
-      created: new Date(),
-    },
-    {
-      name: 'File 2',
-      type: 'document',
-      created: new Date(),
-    },
-    {
-      name: 'File 3',
-      type: 'document',
-      created: new Date(),
-    },
-    {
-      name: 'File 4',
-      type: 'document',
-      created: new Date(),
-    },
-    {
-      name: 'File 5',
-      type: 'document',
-      created: new Date(),
-    },
-    {
-      name: 'File 6',
-      type: 'document',
-      created: new Date(),
-    },
-  ];
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly showDragFieldSubject = new Subject<boolean>();
+  private readonly filesService = inject(FilesService);
 
-  click() {
-    console.log('click');
+  readonly myFiles: ServerFile[] = [];
+
+
+  public readonly showDragField$ = this.showDragFieldSubject.pipe(debounceTime(10));
+
+  @HostListener("dragover", ["$event"]) public onDragOver(evt: DragEvent) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.showDragFieldSubject.next(true);
+  }
+
+  @HostListener("dragleave", ["$event"]) public onDragLeave(evt: DragEvent) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.showDragFieldSubject.next(false);
+
+  }
+
+  @HostListener('drop', ['$event']) public onDrop(evt: DragEvent) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this.showDragFieldSubject.next(false);
+    this.uploadFile(evt.dataTransfer?.files[0] as File);
+  }
+
+  private uploadFile(file: File) {
+    this.filesService.uploadFile(file).subscribe({
+      next: () => this.snackBar.open('Файл был загружен'),
+      error: () => this.snackBar.open('Ошибка при загрузке файла')
+    });
   }
 }
 
-interface File {
+interface ServerFile {
   readonly name: string;
   readonly type: string;
   readonly created: Date;
