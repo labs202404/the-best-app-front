@@ -17,4 +17,31 @@ export class FilesService {
         'Authorization': `Bearer ${this.auth.getToken()}`,
       }});
   }
+
+  public getFiles(): Observable<UserFiles> {
+    return this.http.get<UserFiles>('http://localhost:3000/files', {
+      headers: {
+        'Authorization': `Bearer ${this.auth.getToken()}`,
+      }
+    });
+  }
+
+  public downloadFile(fileId: string): Observable<Blob> {
+    return this.http.get(`http://localhost:3000/files/download/${fileId}`, {
+      headers: { 'Authorization': `Bearer ${this.auth.getToken()}`},
+      responseType: 'blob',
+    });
+  }
+}
+
+export interface UserFiles {
+  readonly owner: ServerFile[];
+}
+
+export interface ServerFile {
+  readonly id: string;
+  readonly name: string;
+  readonly type: string;
+  readonly ownerId: string;
+  readonly createdAt: Date;
 }
